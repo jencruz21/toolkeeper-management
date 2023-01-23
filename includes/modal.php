@@ -56,6 +56,23 @@ window.onload = function() {
       </div>
     </div>
   </div>
+
+  <!-- Checkout Modal-->
+  <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">You are about to perform this transaction, Continue?</h5>
+          <button class="btn btn-success" type="button" data-dismiss="modal" aria-label="">
+            <span aria-hidden="true">Proceed</span>
+          </button>
+          <button class="btn btn-danger" type="button" data-dismiss="modal" aria-label="">
+            <span aria-hidden="true">Cancel</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Customer Modal-->
   <div class="modal fade" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

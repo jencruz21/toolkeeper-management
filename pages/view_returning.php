@@ -1,8 +1,7 @@
-<?php // copy paste nlng naten ung sa approved items hahahaha?>
-
 <?php
 include '../includes/connection.php';
 include '../includes/sidebar.php';
+include '../includes/helper.php'
 ?>
 
 <div class="card shadow mb-4">
@@ -31,7 +30,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     ?>
                         <tr>
                             <td><?=$row['name']?></td>
-                            <td><?=$row['status']?></td>
+                            <td><?php echo checkStatus($row['status']); ?></td>
                             <td><?=$row['price']?></td>
                             <td><?=$row['qty']?></td>
                             <td>

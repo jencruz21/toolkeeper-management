@@ -16,7 +16,7 @@ WHERE EQUIPMENT_ID ='.$_GET['id'];
       $A = $row['NAME'];
       $B = $row['DESCRIPTION'];
       $C = $row['QTY_STOCK'];
-      $D = $row['TYPE'];
+      $unit = $row['UNITS'];
     }
       $id = $_GET['id'];
 ?>
@@ -29,7 +29,7 @@ WHERE EQUIPMENT_ID ='.$_GET['id'];
             <div class="card-body">
 
             <form role="form" method="post" action="eqs_edit1.php">
-              <input type="hidden" name="id" value="<?php echo $zz; ?>" />
+              <input type="hidden" name="EQUIPMENT_ID" value="<?php echo $zz; ?>" />
               <div class="form-group row text-left text-warning">
                 <div class="col-sm-3" style="padding-top: 5px;">
                  Equipment Code:
@@ -56,6 +56,14 @@ WHERE EQUIPMENT_ID ='.$_GET['id'];
               </div>
               <div class="form-group row text-left text-warning">
                 <div class="col-sm-3" style="padding-top: 5px;">
+                 UNITS:
+                </div>
+                <div class="col-sm-9">
+                  <input class="form-control" placeholder="UNITS ex: 2000 Kg" name="UNITS" value="<?php echo $unit; ?>" required>
+                </div>
+              </div>
+              <div class="form-group row text-left text-warning">
+                <div class="col-sm-3" style="padding-top: 5px;">
                  Quantity:
                 </div>
                 <div class="col-sm-9">
@@ -67,10 +75,25 @@ WHERE EQUIPMENT_ID ='.$_GET['id'];
                  Category:
                 </div>
                 <div class="col-sm-9">
-                    <select name="TYPE" class="form-control">
+                    <select name="TYPE" class="form-control" required>
                       <option selected disabled>SELECT</option>
                       <option value="Heavy Equipment">Heavy Equipment</option>
                       <option value="Light Equipment">Light Equipment</option>
+                    </select>
+                </div>
+              </div>
+              <div class="form-group row text-left text-warning">
+                <div class="col-sm-3" style="padding-top: 5px;">
+                 Status:
+                </div>
+                <div class="col-sm-9">
+                    <select name="status" class="form-control" required>
+                      <option selected disabled>SELECT</option>
+                      <option value="Brand New">Brand New</option>
+                      <option value="Slightly Used">Slightly Used</option>
+                      <option value="Used">Used</option>
+                      <option value="Heavily Used">Heavily Used</option>
+                      <option value="Damaged/Maintenance">Damaged/Maintenance</option>
                     </select>
                 </div>
               </div>

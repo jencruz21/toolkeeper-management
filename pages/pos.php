@@ -1,6 +1,7 @@
 <?php
 include '../includes/connection.php';
 include '../includes/topp.php';
+include '../includes/helper.php';
 ?>
 
 <div class="row">
@@ -8,21 +9,18 @@ include '../includes/topp.php';
         <div class="rounded shadow p-3" style="background-color: white;">
             <h1 class="text-center my-4">Transaction Process</h1>
             <form class="form">
-                <input type="hidden" id="user_id" name="user_id" value="<?php echo $_SESSION['MEMBER_ID']?>">
-                <input type="hidden" id="user_position" name="user_position"
-                    value="<?php echo $_SESSION['JOB_TITLE']; ?>"> 
                 <div class="row row-cols-2">
                     <div class="col">
                         <div class="form-group">
                             <input class="form-control" type="text" readonly placeholder="₱ 0" id="total_cost">
                         </div>
                         <div class="form-group">
-                        <select class="form-control" name="user" id="user">
+                        <select class="form-control" name="user" id="user_id">
                         <?php
 $result = mysqli_query($db, "SELECT * FROM employee");
 ?>                          <option selected disabled>Select employee name</option>
                             <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                            <option value="<?=$row['FIRST_NAME'] . " " . $row["LAST_NAME"]?>"><?=$row['FIRST_NAME'] . " " . $row["LAST_NAME"]?></option>
+                            <option value="<?=$row['EMPLOYEE_ID']?>"><?=$row['FIRST_NAME'] . " " . $row["LAST_NAME"]?></option>
                             <?php endwhile;?>
                         </select>
                         </div>
@@ -49,7 +47,7 @@ $result = mysqli_query($db, "SELECT * FROM vehicle WHERE AVAILABILITY = 1");
                             <select id="vehicle" class="form-control">
                                 <option>SELECT A VEHICLE</option>
                                 <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                                <option value="<?=$row['NAME']?>"><?=$row['NAME']?></option>
+                                <option value="<?=$row['ID']?>"><?=$row['NAME']?></option>
                                 <?php endwhile;?>
                             </select>
                         </div>
@@ -95,16 +93,16 @@ $result = mysqli_query($db, "SELECT * FROM vehicle WHERE AVAILABILITY = 1");
         <h3>Equipments</h3>
         <div class="d-flex flex-wrap">
             <?php
-$result = mysqli_query($db, "SELECT * FROM equipment WHERE QTY_STOCK > 0");
+$result = mysqli_query($db, "SELECT * FROM equipment WHERE QTY_STOCK > 0 AND status != 'Damaged/Maintenance'");
 ?>
             <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-            <div class="col-sm-6 col-md-3 mb-3">
+            <div class="col-sm-6 col-md-4 mb-3">
                 <div class="products item">
                     <h6 class="text-info item-name"><?php echo $row['NAME']?></h6>
                     <h6 class="item-unit"><?php echo $row['UNITS']?></h6>
                     <h6 class="item-type"><?php echo $row['TYPE']?></h6>
-                    <h6 class="item-status font-weight-bold" style="color: red"><?php echo $row['status']?></h6>
-                    <h6 class="item-id" style="display: hidden;"><?php echo $row['EQUIPMENT_ID']?>
+                    <?php echo checkStatus($row['status']); ?>
+                    <h6 class="item-id" style="visibility: hidden;"><?php echo $row['EQUIPMENT_ID']?>
                     </h6>
                     <h6 class="text-right item-price">₱ <?php echo $row['PRICE']?></h6>
                 </div>
@@ -119,13 +117,13 @@ $result = mysqli_query($db, "SELECT * FROM equipment WHERE QTY_STOCK > 0");
 $result = mysqli_query($db, "SELECT p.*, c.CNAME FROM product p INNER JOIN category c ON p.CATEGORY_ID = c.CATEGORY_ID WHERE QTY_STOCK > 0");
 ?>
             <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-            <div class="col-sm-6 col-md-3 mb-3">
+            <div class="col-sm-6 col-md-4 mb-3">
                 <div class="products item">
                     <h6 class="text-info item-name"><?php echo $row['NAME']?></h6>
                     <h6 class="item-unit"><?php echo $row['DESCRIPTION']?></h6>
                     <h6 class="item-type"><?php echo $row['CNAME']?></h6>
                     <h6 class="item-status font-weight-bold" style="color: red"><?php echo $row['PRODUCT_CODE']?></h6>
-                    <h6 class="item-id" style="display: hidden;"><?php echo $row['PRODUCT_ID']?>
+                    <h6 class="item-id hidden" ><?php echo $row['PRODUCT_ID']?>
                     </h6>
                     <h6 class="text-right item-price">₱ <?php echo $row['PRICE']?></h6>
                 </div>
@@ -148,7 +146,7 @@ const totalCostComponent = document.getElementById('total_cost');
 const amountPaidComponent = document.getElementById('amount_paid');
 const detailsComponent = document.getElementById('details');
 const vehicleComponent = document.getElementById('vehicle');
-const userComponent = document.getElementById('user');
+// const userComponent = document.getElementById('user');
 const userIdComponent = document.getElementById('user_id');
 const userPositionComponent = document.getElementById('user_position');
 const reset = document.getElementById('reset');
@@ -173,10 +171,19 @@ for (let i = 0; i < item.length; i++) {
         const itemName = item[i].getElementsByClassName('item-name')[0].innerText;
         const unit = item[i].getElementsByClassName('item-unit')[0].innerText;
         const type = item[i].getElementsByClassName('item-type')[0].innerText;
-        const itemId = item[i].getElementsByClassName('item-id')[0].innerText;
+        const itemId = item[i].getElementsByClassName('item-id')[0].innerHTML;
         const status = item[i].getElementsByClassName('item-status')[0].innerText;
         const price = item[i].getElementsByClassName('item-price')[0].innerText;
         const finalPrice = parseInt(price.substring(2));
+
+        // console.log("item name: " + itemName);
+        // console.log("item unit: " + unit);
+        // console.log("item type: " + type);
+        // console.log("item itemId: " + itemId);
+        // console.log("item status: " + status);
+        // console.log("item price: " + price);
+        // console.log("final Price: " + finalPrice);
+
         totalPrice += finalPrice;
         totalCostComponent.value = "₱ " + totalPrice;
         numOfItems++;
@@ -257,25 +264,40 @@ reset.addEventListener('click', function() {
 })
 
 proceed.addEventListener('click', function(e) {
-    e.preventDefault()
+    e.preventDefault();
     if (parseInt(amountPaid) < parseInt(totalPrice)) {
         alert("The amount you paid is insufficient!\nTotal amount: " + amountPaid);
         exit();
     } else if (parseInt(amountPaid) === 0) {
         alert("The amount you paid is insufficient!");
     } else {
+        // details          ✅
+        // total items      ✅
+        // total cost       ✅
+        // amount paid      ✅
+        // vehicle id       ✅
+        // employee id      ✅
+        // checkout date    ✅
+        // checkout id      ✅
+        // console.log("Employee Id: " + userIdComponent.value);
+        // console.log("total_cost: " + totalPrice);
+        // console.log("total_item_count: " + numOfItems);
+        // console.log("amount_paid: " + amountPaid);
+        // console.log("detail: " + details);
+        // console.log("vehicle_id: " + vehicle);
+        // console.log("checkout_id: " + uuid);
+
         const checkoutBody = new URLSearchParams();
 
-        checkoutBody.append('user', userComponent.value);
-        checkoutBody.append('user_id', userIdComponent.value)
-        checkoutBody.append('user_position', userPositionComponent.value);
+        checkoutBody.append('employee_id', userIdComponent.value)
         checkoutBody.append("total_cost", totalPrice);
         checkoutBody.append("total_item_count", numOfItems);
         checkoutBody.append('amount_paid', amountPaid);
         checkoutBody.append('detail', details);
-        checkoutBody.append('vehicle', vehicle);
+        checkoutBody.append('vehicle_id', vehicle);
         checkoutBody.append('checkout_id', uuid);
 
+        console.log("Test Start");
         fetch('../api/checkout.php', {
                 method: 'POST',
                 headers: {
@@ -283,14 +305,16 @@ proceed.addEventListener('click', function(e) {
                 },
                 body: checkoutBody
             })
-            .then(res =>
-                res.text())
+            .then(res => {
+                return res.text();
+            })
             .then(result => {
                 console.log(result);
                 cleanUp();
             })
             .catch(err => console.error(err));
-
+            console.log("Test End");
+            
         for (let i = 0; i < data.length; i++) {
             const checkoutItem = new URLSearchParams();
             checkoutItem.append('name', data[i].itemName);
@@ -301,6 +325,7 @@ proceed.addEventListener('click', function(e) {
             checkoutItem.append('status', data[i].status);
             checkoutItem.append('item_id', data[i].itemId);
             checkoutItem.append('chkout_id', uuid);
+
             setTimeout(function() {
                 fetch('../api/checkout_items.php', {
                         method: 'POST',

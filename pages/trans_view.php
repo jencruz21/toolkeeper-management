@@ -7,14 +7,15 @@ include '../includes/sidebar.php';
 $checkout_id = $_GET['id'];
 $customer_id = $_GET['customer_id'];
 
-$query = "SELECT * FROM checkout_details WHERE checkout_id = '$checkout_id'";
+$query = "SELECT cd.*, e.FIRST_NAME, e.LAST_NAME, v.NAME as vehicle FROM checkout_details cd JOIN employee e ON cd.employee_id = e.EMPLOYEE_ID JOIN vehicle v ON cd.vehicle_id = v.ID WHERE checkout_id = '$checkout_id'";
 $result = mysqli_query($db, $query) or die(mysqli_error($db));
 while ($row = mysqli_fetch_assoc($result)) {
     $date = $row['checkout_date'];
-    $name = $row['customer'];
+    $name = $row['FIRST_NAME'] . " " . $row['LAST_NAME'];
     $vehicle = $row['vehicle'];
     $customer_position = $row['customer_position'];
     $details = $row['details'];
+    $checkout_status = $row['checkout_status'];
 }
 ?>
 
@@ -56,9 +57,13 @@ while ($row = mysqli_fetch_assoc($result)) {
                   <h6>
                     <a href="print_receipt.php?checkout_id=<?=$checkout_id?>" target="_blank" class="btn btn-primary">Print transaction</a>
                   </h6>
-                  <h6>
-                    <a href="approve_transaction.php?checkout_id=<?=$checkout_id?>&customer_id=<?= $customer_id?>" class="btn btn-primary">Approve Request</a>
-                  </h6>
+                  <?php if ((int)$checkout_status === 1) : ?>
+                    <h6 style="font-weight: bold">Transaction Approved!</h6>  
+                  <?php else: ?>
+                    <h6>
+                      <a href="approve_transaction.php?checkout_id=<?=$checkout_id?>&customer_id=<?= $customer_id?>" class="btn btn-primary">Approve Request</a>
+                    </h6>
+                  <?php endif; ?>
                 </div>
               </div>
           <div class="row row-cols-2">

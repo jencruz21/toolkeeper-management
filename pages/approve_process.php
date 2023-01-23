@@ -29,7 +29,7 @@ if (isset($_POST['approve'])) {
     $query2 = "UPDATE equipment SET QTY_STOCK = QTY_STOCK - '$amount' WHERE NAME = '$name'";
     mysqli_query($db, $query2);
 
-    $query3 = "UPDATE checkout_items SET checkout_status = '1' WHERE item_id = '$item_id'";
+    $query3 = "UPDATE checkout_items SET checkout_status = '1' WHERE item_id = '$item_id' AND chkout_id = '$checkout_id'";
     mysqli_query($db, $query3);
 
     header("location: trans_view.php?action=edit&id=$checkout_id&customer_id=$customer_id");

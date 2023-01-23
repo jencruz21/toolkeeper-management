@@ -28,9 +28,9 @@ $query = '';
 
 if ($_SESSION['TYPE'] === "User") {
   $id = $_SESSION['MEMBER_ID'];
-  $query = "SELECT * FROM checkout_details WHERE customer_id = '$id'";
+  $query = "SELECT cd.*, e.FIRST_NAME, e.LAST_NAME FROM checkout_details cd JOIN employee e ON cd.employee_id = e.EMPLOYEE_ID JOIN vehicle v ON cd.vehicle_id = v.ID WHERE customer_id = '$id'";
 } else {
-  $query = "SELECT * FROM checkout_details";
+  $query = "SELECT * FROM checkout_details cd JOIN employee e ON cd.employee_id = e.EMPLOYEE_ID JOIN vehicle v ON cd.vehicle_id = v.ID";
 }
 
 $result = mysqli_query($db, $query) or die(mysqli_error($db));
@@ -46,7 +46,7 @@ while ($row = mysqli_fetch_assoc($result)) {
           echo date("Y-m-d g:i A", $str);
         ?>
       </td>
-      <td><?= $row['customer'] ?> </td>
+      <td><?= $row['FIRST_NAME'] ?> <?= $row['LAST_NAME'] ?> </td>
       <td><?php echo $row['checkout_status'] === "0" ? "Pending" : "Approved" ?></td>
       <td><?= $row['total_items'] ?></td>
       <td align="right">

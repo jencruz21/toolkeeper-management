@@ -90,7 +90,7 @@ $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->subHeader();
 
-$pdf->SetFont('Times', '', 10);
+$pdf->SetFont('Times', 'B', 10);
 $pdf->Cell(27.1428571 * 2, 9, 'Item Name', 1, 0, 'C');
 $pdf->Cell(24.1428571, 9, 'Unit', 1, 0, 'C');
 $pdf->Cell(30.1428571, 9, 'Type', 1, 0, 'C');
@@ -99,7 +99,7 @@ $pdf->Cell(17.1428571, 9, 'Price', 1, 0, 'C');
 $pdf->Cell(37.1428571, 9, 'Date', 1, 1, 'C');
 
 $result2 = mysqli_query($db, "SELECT * FROM checkout_items WHERE chkout_id = '{$details['checkout_id']}'");
-
+$pdf->SetFont('Times', '', 10);
 while ($row = mysqli_fetch_assoc($result2)) {
     $pdf->Cell(27.1428571 * 2, 9, $row['name'], 1, 0, 'C');
     $pdf->Cell(24.1428571, 9, $row['unit'], 1, 0, 'C');

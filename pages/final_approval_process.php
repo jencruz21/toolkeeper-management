@@ -27,7 +27,7 @@ if (isset($_POST['return'])) {
     $query2 = "DELETE FROM approved_items WHERE name = '$name'";
     mysqli_query($db, $query2);
 
-    $query3 = "UPDATE equipment SET QTY_STOCK = QTY_STOCK + '$qty' WHERE NAME = '$name'";
+    $query3 = "UPDATE equipment SET QTY_STOCK = QTY_STOCK + '$qty', status = '$status' WHERE NAME = '$name'";
     mysqli_query($db, $query3);
 
     header("location: final_approval_items.php");
