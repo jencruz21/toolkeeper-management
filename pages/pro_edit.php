@@ -24,6 +24,7 @@ while ($row = mysqli_fetch_array($result)) {
     $B = $row['DESCRIPTION'];
     $C = $row['PRICE'];
     $D = $row['CNAME'];
+    $QTY = $row['QTY_STOCK'];
 }
 $id = $_GET['id'];
 ?>
@@ -59,6 +60,14 @@ $id = $_GET['id'];
                 </div>
                 <div class="col-sm-9">
                    <textarea class="form-control" placeholder="Description" name="description"><?php echo $B; ?></textarea>
+                </div>
+              </div>
+              <div class="form-group row text-left text-warning">
+                <div class="col-sm-3" style="padding-top: 5px;">
+                 Stock Quantity:
+                </div>
+                <div class="col-sm-9">
+                   <input type="number" class="form-control" placeholder="In stock: <?= $QTY?>" name="qty">
                 </div>
               </div>
               <div class="form-group row text-left text-warning">

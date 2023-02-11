@@ -17,6 +17,8 @@ WHERE EQUIPMENT_ID ='.$_GET['id'];
       $B = $row['DESCRIPTION'];
       $C = $row['QTY_STOCK'];
       $unit = $row['UNITS'];
+      $type = $row['TYPE'];
+      $status = $row['status'];
     }
       $id = $_GET['id'];
 ?>
@@ -76,9 +78,15 @@ WHERE EQUIPMENT_ID ='.$_GET['id'];
                 </div>
                 <div class="col-sm-9">
                     <select name="TYPE" class="form-control" required>
-                      <option selected disabled>SELECT</option>
-                      <option value="Heavy Equipment">Heavy Equipment</option>
-                      <option value="Light Equipment">Light Equipment</option>
+                    <?php $equipment_type_result =  mysqli_query($db, "SELECT type_name FROM equipment_type"); ?>
+                        <option value="" <?= is_null($type) && $type === "" ? "selected" : "" ?> disabled >SELECT</option>
+                      <?php while ($equipment_type = mysqli_fetch_assoc($equipment_type_result)) : ?>
+                        <?php if ($equipment_type['type_name'] === $type) :?>
+                          <option value="<?= $equipment_type['type_name'] ?>" selected><?= $equipment_type['type_name'] ?></option>
+                        <?php else :?>
+                          <option value="<?= $equipment_type['type_name'] ?>"><?= $equipment_type['type_name'] ?></option>  
+                        <?php endif; ?>
+                      <?php endwhile; ?>
                     </select>
                 </div>
               </div>
@@ -87,13 +95,17 @@ WHERE EQUIPMENT_ID ='.$_GET['id'];
                  Status:
                 </div>
                 <div class="col-sm-9">
+                  <!-- select the name of the equipment status -->
                     <select name="status" class="form-control" required>
-                      <option selected disabled>SELECT</option>
-                      <option value="Brand New">Brand New</option>
-                      <option value="Slightly Used">Slightly Used</option>
-                      <option value="Used">Used</option>
-                      <option value="Heavily Used">Heavily Used</option>
-                      <option value="Damaged/Maintenance">Damaged/Maintenance</option>
+                      <?php $equipment_status_result =  mysqli_query($db, "SELECT status_name FROM equipment_status"); ?>
+                        <option value="" <?= is_null($status) && $status === "" ? "selected" : "" ?> disabled>SELECT</option>
+                      <?php while ($equipment_status = mysqli_fetch_assoc($equipment_status_result)) : ?>
+                        <?php if ($equipment_status['status_name'] === $status) :?>
+                          <option value="<?= $equipment_status['status_name'] ?>" selected><?= $equipment_status['status_name'] ?></option>
+                        <?php else :?>
+                          <option value="<?= $equipment_status['status_name'] ?>"><?= $equipment_status['status_name'] ?></option>  
+                        <?php endif; ?>
+                      <?php endwhile; ?>
                     </select>
                 </div>
               </div>

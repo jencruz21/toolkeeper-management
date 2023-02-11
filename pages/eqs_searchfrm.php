@@ -10,7 +10,8 @@ include'../includes/sidebar.php';
                 <i class="fas fa-flip-horizontal fa-fw fa-share"></i> Back</a>
             <div class="card-body">
           <?php 
-            $query = 'SELECT * FROM equipment';
+            $id = mysqli_real_escape_string($db, $_GET['id']);
+            $query = "SELECT * FROM equipment WHERE EQUIPMENT_ID = '{$id}'";
             $result = mysqli_query($db, $query) or die(mysqli_error($db));
               while($row = mysqli_fetch_array($result))
               {   

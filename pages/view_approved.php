@@ -3,31 +3,26 @@ include '../includes/connection.php';
 include '../includes/sidebar.php';
 include '../includes/helper.php';
 ?>
-<?php
-
-$customer_id = $_SESSION['MEMBER_ID'];
-?>
 
 <div class="card shadow mb-4">
-    <div class="card-body">
-        <div class="row row-cols-2">
-            <div class="col-6">
-                <div class="card-title">
-                    <h3>Approved Items</h3>
+    <div class="card-header py-3">
+        <div class="row row-cols">
+            <div class="col">
+                <h4 class="m-2 font-weight-bold text-primary">Approved Items</h4>
+            </div>
+            <div class="col">
+                <div class="row justify-content-end mr-2">
+                    <a href="print_damage_report.php" class="btn btn-primary">Download Damage Report</a>
                 </div>
             </div>
-
-            <div class="col-6">
-                <div class="row justify-content-end mr-2">
-                    <a href="print_damage_report.php?user_id=<?= $_SESSION['POSITION_ID'] ?>" class="btn btn-primary">Download Damage Report</a>
-                </div>       
-            </div>
         </div>
+    </div>
+    <div class="card-body">
 
         <div class="row">
 
             <div class="col">
-                <table class="table table-bordered" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Products</th>
@@ -40,7 +35,7 @@ $customer_id = $_SESSION['MEMBER_ID'];
                     </thead>
                     <tbody>
                         <?php
-$query = "SELECT * FROM approved_items WHERE customer_id ='$customer_id' GROUP BY name";
+$query = "SELECT * FROM approved_items GROUP BY name";
 $result = mysqli_query($db, $query) or die(mysqli_error($db));
 while ($row = mysqli_fetch_assoc($result)) {
     ?>
@@ -55,7 +50,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                             <td>
                                 <div class="btn-group">
                                     <form action="return.php" method="post">
-                                        <input type="hidden" name="customer_id" value="<?=$customer_id?>">
+                                        <input type="hidden" name="customer_id" value="<?=$row['employee_id']?>">
                                         <input type="hidden" name="checkout_id" value="<?=$row['checkout_id']?>">
                                         <input type="hidden" name="name" value="<?=$row['name']?>">
                                         <input type="hidden" name="unit" value="<?=$row['unit']?>">
@@ -64,6 +59,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                                         <input type="hidden" name="status" value="<?=$row['status']?>">
                                         <input type="hidden" name="qty" value="<?=$row['qty']?>">
                                         <input type="hidden" name="item_id" value="<?=$row['item_id']?>">
+                                        <input type="hidden" name="item_class" value="<?=$row['item_class']?>">
                                         <button class="btn btn-primary" name="return"><i
                                                 class="fas fa-fw fa-arrow-left"></i> Return</button>
                                     </form>

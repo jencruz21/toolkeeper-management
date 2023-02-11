@@ -5,13 +5,13 @@ include '../includes/helper.php'
 ?>
 
 <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h4 class="m-2 font-weight-bold text-primary">Returned Equipment</h4>
+    </div>
     <div class="card-body">
-        <div class="card-title">
-            <h3>Returned Equipment</h3>
-        </div>
         <div class="row">
             <div class="col">
-                <table class="table table-bordered" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Equipment</th>

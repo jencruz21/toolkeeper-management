@@ -13,9 +13,9 @@ function checkVehicle ($id) {
     return false;
 }
 
-function updateVehicle($id, $emp_id) {
+function updateVehicle($id, $emp_id, $checkout_id) {
     global $db;
-    $query = "UPDATE vehicle SET AVAILABILITY = 0, BORROWER_EMP='$emp_id' WHERE ID='$id'";
+    $query = "UPDATE vehicle SET AVAILABILITY = 0, BORROWER_EMP='$emp_id', CHECKOUT_ID='{$checkout_id}' WHERE ID='$id'";
     mysqli_query($db, $query);
 
     if (mysqli_affected_rows($db) > 1) {

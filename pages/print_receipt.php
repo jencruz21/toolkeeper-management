@@ -5,7 +5,18 @@ require '../fpdf/fpdf.php';
 require "../includes/connection.php";
 
 $id = mysqli_real_escape_string($db, $_GET['checkout_id']);
-$result = mysqli_query($db, "SELECT * FROM checkout_details WHERE checkout_id = '{$id}'");
+$result = mysqli_query($db, "SELECT cd.*, 
+e.FIRST_NAME, 
+e.LAST_NAME, 
+e.JOB_ID,
+v.NAME as VEHICLE_NAME, 
+v.AVAILABILITY, 
+v.ID as v_vehicle_id, 
+v.CHECKOUT_ID as v_checkout_id
+FROM checkout_details cd 
+JOIN employee e ON cd.employee_id = e.EMPLOYEE_ID 
+JOIN vehicle v ON cd.vehicle_id = v.ID 
+WHERE cd.checkout_id = '{$id}'");
 $details = mysqli_fetch_assoc($result);
 
 class PDF extends FPDF
@@ -83,8 +94,8 @@ $pdf = new PDF();
 $pdf->setCheckoutId($details['checkout_id']);
 $pdf->setAmountPaid($details['amount_paid']);
 $pdf->setTotalCost($details['total_cost']);
-$pdf->setCustomerName($details['customer']);
-$pdf->setCustomerPosition($details['customer_position']);
+$pdf->setCustomerName($details['FIRST_NAME'] . " " . $details['LAST_NAME']);
+$pdf->setCustomerPosition($details['JOB_ID'] == 1 ? "Engineer" : "Employee");
 $pdf->setCheckoutDate($details['checkout_date']);
 $pdf->AliasNbPages();
 $pdf->AddPage();

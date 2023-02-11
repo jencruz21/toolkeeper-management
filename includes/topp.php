@@ -78,6 +78,10 @@
       </a>
 
           <!-- Topbar Navbar -->
+          <div class="d-flex">
+            <input class="form-control" type="text" id="search" size="50" placeholder="Search Items">
+          </div>
+          
           <ul class="navbar-nav ml-auto">
 
             <li class="nav-item dropdown no-arrow">
@@ -86,7 +90,8 @@
               </a>
             </li>
 
-            <div class="topbar-divider d-none d-sm-block"></div>
+            <div class="topbar-divider d-none d-sm-block">
+            </div>
 
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">

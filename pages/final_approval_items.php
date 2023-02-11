@@ -5,13 +5,13 @@ include '../includes/helper.php';
 ?>
 
 <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h4 class="m-2 font-weight-bold text-primary">Final Approval of Returned Items</h4>
+    </div>
     <div class="card-body">
-        <div class="card-title">
-            <h3>Final Approval of Returned Items</h3>
-        </div>
         <div class="row">
             <div class="col">
-                <table class="table table-bordered" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Equipment</th>
@@ -26,7 +26,7 @@ include '../includes/helper.php';
                     </thead>
                     <tbody>
                         <?php
-$query = "SELECT r.*, e.FIRST_NAME, e.LAST_NAME  FROM returned_items r JOIN users u ON r.customer_id = u.ID JOIN employee e ON u.EMPLOYEE_ID = e.EMPLOYEE_ID WHERE r.return_status = 0";
+$query = "SELECT r.*, e.FIRST_NAME, e.LAST_NAME  FROM returned_items r JOIN employee e ON r.employee_id = e.EMPLOYEE_ID WHERE r.return_status = 0";
 $result = mysqli_query($db, $query) or die(mysqli_error($db));
 while ($row = mysqli_fetch_assoc($result)) {
     ?>
@@ -48,7 +48,7 @@ $date_returned = strtotime($row['date_returned']);
                                     <?php if ($row['status'] === "Damaged/Maintenance"): ?>
                                     <?php else: ?>
                                         <form action="final_approval_process.php" method="post">
-                                            <input type="hidden" name="customer_id" value="<?=$customer_id?>">
+                                            <input type="hidden" name="customer_id" value="<?=$row['employee_id']?>">
                                             <input type="hidden" name="checkout_id" value="<?=$row['checkout_id']?>">
                                             <input type="hidden" name="name" value="<?=$row['name']?>">
                                             <input type="hidden" name="unit" value="<?=$row['unit']?>">
@@ -57,6 +57,7 @@ $date_returned = strtotime($row['date_returned']);
                                             <input type="hidden" name="status" value="<?=$row['status']?>">
                                             <input type="hidden" name="qty" value="<?=$row['qty']?>">
                                             <input type="hidden" name="item_id" value="<?=$row['item_id']?>">
+                                            <input type="hidden" name="item_class" value="<?=$row['item_class']?>">
                                             <button class="btn btn-primary bg-gradient-primary" name="return"><i
                                                     class="fas fa-fw fa-arrow-left"></i> Return</button>
                                         </form>

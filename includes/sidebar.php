@@ -125,11 +125,6 @@
                     <span>Marterials</span></a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="inventory.php">
-                    <i class="fas fa-fw fa-archive"></i>
-                    <span>Inventory</span></a>
-            </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="transaction.php">
@@ -145,7 +140,7 @@
 
             <li class="nav-item">
                 <a class="nav-link" href="view_approved.php">
-                    <i class="fas fa-fw fa-thumbs-up"></i>
+                    <i class="fas fa-fw fa-archive"></i>
                     <span>Approved Items</span></a>
             </li>
             <?php else: ?>
@@ -183,7 +178,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="view_approved.php">
-                    <i class="fas fa-fw fa-thumbs-up"></i>
+                    <i class="fas fa-fw fa-archive"></i>
                     <span>Approved Items</span></a>
             </li>
             <li class="nav-item">
@@ -196,12 +191,6 @@
                 <a class="nav-link" href="employee.php">
                     <i class="fas fa-fw fa-user"></i>
                     <span>Employees</span></a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="inventory.php">
-                    <i class="fas fa-fw fa-archive"></i>
-                    <span>Inventory</span></a>
             </li>
 
             <li class="nav-item">

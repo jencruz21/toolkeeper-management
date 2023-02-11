@@ -66,9 +66,6 @@ $sup .= "</select>";
                               <input type="number"  min="1" max="999999999" class="form-control" placeholder="Quantity" name="quantity" required>
                             </div>
                             <div class="form-group">
-                              <input type="number"  min="1" max="999999999" class="form-control" placeholder="On Hand" name="onhand" required>
-                            </div>
-                            <div class="form-group">
                               <input type="number"  min="1" max="9999999999" class="form-control" placeholder="Price" name="price" required>
                             </div>
                             <div class="form-group">

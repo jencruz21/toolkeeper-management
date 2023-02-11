@@ -9,14 +9,13 @@ include '../includes/connection.php';
 $name = mysqli_real_escape_string($db, $_POST['name']);
 $desc = mysqli_real_escape_string($db, $_POST['description']);
 $qty = mysqli_real_escape_string($db, $_POST['quantity']);
-$oh = mysqli_real_escape_string($db, $_POST['onhand']);
 $pr = mysqli_real_escape_string($db, $_POST['price']);
 $cat = mysqli_real_escape_string($db, $_POST['category']);
 $dats = mysqli_real_escape_string($db, $_POST['datestock']);
 
 $query = "INSERT INTO product
-                  (PRODUCT_CODE, NAME, DESCRIPTION, QTY_STOCK, ON_HAND, PRICE, CATEGORY_ID, DATE_STOCK_IN)
-                  VALUES ('{$pc}','{$name}','{$desc}','{$qty}','{$oh}','{$pr}','{$cat}','{$dats}')";
+                  (PRODUCT_CODE, NAME, DESCRIPTION, QTY_STOCK, PRICE, CATEGORY_ID, DATE_STOCK_IN)
+                  VALUES ('{$pc}','{$name}','{$desc}','{$qty}','{$pr}','{$cat}','{$dats}')";
         mysqli_query($db, $query) or die('Error in updating product in Database ' . mysqli_error($db));
             }
 ?>

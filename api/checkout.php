@@ -48,7 +48,7 @@ if (isset($_POST['checkout_id'])) {
                 '{$customer_position}', 
                 '{$date}', 
                 '{$checkOutId}')");
-        updateVehicle($vehicle_id, $employee_id);
+        updateVehicle($vehicle_id, $employee_id, $checkOutId);
         echo mysqli_affected_rows($db);
         mysqli_close($db);
     } else {

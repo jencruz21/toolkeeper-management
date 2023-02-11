@@ -4,8 +4,14 @@ require '../fpdf/fpdf.php';
 
 require "../includes/connection.php";
 
-$id = mysqli_real_escape_string($db, $_GET['user_id']);
-$result = mysqli_query($db, "SELECT a.*, e.FIRST_NAME, e.LAST_NAME FROM approved_items a JOIN users u ON a.customer_id = u.ID JOIN employee e ON u.EMPLOYEE_ID = e.EMPLOYEE_ID WHERE a.customer_id = '{$id}'");
+$query = "SELECT 
+            a.*, 
+            e.FIRST_NAME, 
+            e.LAST_NAME 
+        FROM approved_items a  
+        JOIN employee e ON a.employee_id = e.EMPLOYEE_ID";
+
+$result = mysqli_query($db, $query);
 // Checkout ID:
 // Date returned:
 // Equipment Name:
@@ -16,7 +22,6 @@ $result = mysqli_query($db, "SELECT a.*, e.FIRST_NAME, e.LAST_NAME FROM approved
 
 class PDF extends FPDF
 {
-
 
     public function header()
     {

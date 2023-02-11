@@ -5,11 +5,12 @@ include('../includes/connection.php');
 			$pname = $_POST['prodname'];
             $desc = $_POST['description'];
             $pr = $_POST['price'];
+			$qty = $_POST['qty'];
             $cat = $_POST['category'];
 		
-	 			$query = 'UPDATE product set NAME="'.$pname.'",
-					DESCRIPTION="'.$desc.'", PRICE="'.$pr.'", CATEGORY_ID ="'.$cat.'" WHERE
-					PRODUCT_CODE ="'.$pc.'"';
+	 			$query = "UPDATE product set NAME='{$pname}',
+					DESCRIPTION='{$desc}', PRICE='{$pr}', CATEGORY_ID ='{$cat}', QTY_STOCK = QTY_STOCK + '{$qty}'  WHERE
+					PRODUCT_CODE ='{$pc}'";
 					$result = mysqli_query($db, $query) or die(mysqli_error($db));
 
 							

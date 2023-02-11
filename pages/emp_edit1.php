@@ -16,8 +16,6 @@ include'../includes/connection.php';
 					GENDER="'.$gen.'", EMAIL="'.$email.'", PHONE_NUMBER="'.$phone.'", HIRED_DATE ="'.$hdate.'", l.PROVINCE ="'.$prov.'", l.CITY ="'.$cit.'" WHERE
 					EMPLOYEE_ID ="'.$zz.'"';
 					$result = mysqli_query($db, $query) or die(mysqli_error($db));
-
-							
 ?>	
 	<script type="text/javascript">
 			alert("You've Update Employee Successfully.");

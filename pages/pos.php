@@ -96,9 +96,9 @@ $result = mysqli_query($db, "SELECT * FROM vehicle WHERE AVAILABILITY = 1");
 $result = mysqli_query($db, "SELECT * FROM equipment WHERE QTY_STOCK > 0 AND status != 'Damaged/Maintenance'");
 ?>
             <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-            <div class="col-sm-6 col-md-4 mb-3">
+            <div class="col-sm-6 col-md-4 mb-3 search-item">
                 <div class="products item">
-                    <h6 class="text-info item-name"><?php echo $row['NAME']?></h6>
+                    <h6 class="text-info item-name"><?php echo $row['NAME']?><span class="item-class" style="visibility: hidden">E</span></h6>
                     <h6 class="item-unit"><?php echo $row['UNITS']?></h6>
                     <h6 class="item-type"><?php echo $row['TYPE']?></h6>
                     <?php echo checkStatus($row['status']); ?>
@@ -117,13 +117,13 @@ $result = mysqli_query($db, "SELECT * FROM equipment WHERE QTY_STOCK > 0 AND sta
 $result = mysqli_query($db, "SELECT p.*, c.CNAME FROM product p INNER JOIN category c ON p.CATEGORY_ID = c.CATEGORY_ID WHERE QTY_STOCK > 0");
 ?>
             <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-            <div class="col-sm-6 col-md-4 mb-3">
+            <div class="col-sm-6 col-md-4 mb-3 search-item">
                 <div class="products item">
-                    <h6 class="text-info item-name"><?php echo $row['NAME']?></h6>
+                    <h6 class="text-info item-name"><?php echo $row['NAME']?><span class="item-class" style="visibility: hidden">M</span></h6>
                     <h6 class="item-unit"><?php echo $row['DESCRIPTION']?></h6>
                     <h6 class="item-type"><?php echo $row['CNAME']?></h6>
-                    <h6 class="item-status font-weight-bold" style="color: red"><?php echo $row['PRODUCT_CODE']?></h6>
-                    <h6 class="item-id hidden" ><?php echo $row['PRODUCT_ID']?>
+                    <h6 class="item-status font-weight-bold" style="color: green">Brand New</h6>
+                    <h6 class="item-id" style="visibility:hidden"><?php echo $row['PRODUCT_ID']?>
                     </h6>
                     <h6 class="text-right item-price">₱ <?php echo $row['PRICE']?></h6>
                 </div>
@@ -136,12 +136,15 @@ $result = mysqli_query($db, "SELECT p.*, c.CNAME FROM product p INNER JOIN categ
 
 <!-- POS SYSTEM JS -->
 <script>
+// FUTURE GOALS
+// this needs to be re written to store data in local storage para atleast may persistence
 const item = document.getElementsByClassName('item');
 const table = document.getElementById('table');
 const itemRemoval = document.getElementsByClassName('remove-item');
 
 //checkout items
 const proceed = document.getElementById('proceed'); //button
+// eto ung total cost component
 const totalCostComponent = document.getElementById('total_cost');
 const amountPaidComponent = document.getElementById('amount_paid');
 const detailsComponent = document.getElementById('details');
@@ -151,6 +154,10 @@ const userIdComponent = document.getElementById('user_id');
 const userPositionComponent = document.getElementById('user_position');
 const reset = document.getElementById('reset');
 let tr = null;
+
+//search components
+const search = document.getElementById("search");
+const searchItems = document.getElementsByClassName("search-item");
 
 let uuid = generateUUID();
 
@@ -174,6 +181,7 @@ for (let i = 0; i < item.length; i++) {
         const itemId = item[i].getElementsByClassName('item-id')[0].innerHTML;
         const status = item[i].getElementsByClassName('item-status')[0].innerText;
         const price = item[i].getElementsByClassName('item-price')[0].innerText;
+        const itemClass = item[i].getElementsByClassName('item-class')[0].innerHTML;
         const finalPrice = parseInt(price.substring(2));
 
         // console.log("item name: " + itemName);
@@ -210,7 +218,8 @@ for (let i = 0; i < item.length; i++) {
             type,
             itemId,
             status,
-            checkOutId: uuid
+            checkOutId: uuid,
+            itemClass
         });
 
         td1.innerHTML = itemName;
@@ -229,15 +238,30 @@ for (let i = 0; i < item.length; i++) {
         for (let j = 0; j < itemRemoval.length; j++) {
             itemRemoval[j].getElementsByTagName('td')[4].addEventListener('click', function(e) {
                 e.target.addEventListener('click', function() {
+                    // Fetch Price
+                    const equipmentPrice = itemRemoval[j].getElementsByTagName('td')[2]
+                        .innerText;
+                    const equipmentPriceStr = equipmentPrice.substring(2);
+                    totalPrice -= equipmentPriceStr;
+                    totalCostComponent.value = "₱ " + totalPrice;
+
+                    // Fetch name 
                     const equipmentName = itemRemoval[j].getElementsByTagName('td')[0]
                         .innerText;
                     const index = data.map(data => data.itemName).indexOf(equipmentName);
+                        
                     if (index > -1) {
                         data.splice(index, 1);
+                        numOfItems -= 1;
+                        // if (data.length <= 1) {
+                        //     j = 0;
+                        // } else {
+                        //     document.getElementsByClassName('remove-item')[j].innerHTML = "";
+                        // }
+                        document.getElementsByClassName('remove-item')[j].innerHTML = "";
                     }
-                    document.getElementsByClassName('remove-item')[j].style = "display: none"
                 });
-            });
+            }); 
         }
     });
 }
@@ -297,7 +321,6 @@ proceed.addEventListener('click', function(e) {
         checkoutBody.append('vehicle_id', vehicle);
         checkoutBody.append('checkout_id', uuid);
 
-        console.log("Test Start");
         fetch('../api/checkout.php', {
                 method: 'POST',
                 headers: {
@@ -325,6 +348,7 @@ proceed.addEventListener('click', function(e) {
             checkoutItem.append('status', data[i].status);
             checkoutItem.append('item_id', data[i].itemId);
             checkoutItem.append('chkout_id', uuid);
+            checkoutItem.append('item_class', data[i].itemClass);
 
             setTimeout(function() {
                 fetch('../api/checkout_items.php', {
@@ -378,6 +402,21 @@ function generateUUID() {
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
 }
+
+search.addEventListener("keyup", function(e) {
+    const searchValue = e.target.value.toLowerCase();
+    
+    for (let i = 0; i < searchItems.length; i++) {
+    const itemName = searchItems[i].getElementsByClassName("item")[0].getElementsByTagName("h6")[0];
+    let textValue = itemName.innerText || itemName.textContent;
+
+    if (textValue.toLowerCase().indexOf(searchValue) > -1) {
+        searchItems[i].style.display = "";
+    } else {
+        searchItems[i].style.display = "none";
+    }
+}
+});
 </script>
 
 <?php
